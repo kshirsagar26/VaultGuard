@@ -25,7 +25,9 @@ export const AuthProvider = ({ children }) => {
     if (savedUser && savedSalt) {
       setUser(JSON.parse(savedUser));
       setSalt(savedSalt);
-      setIsAuthenticated(true);
+      // Note: masterPassword is not restored from localStorage for security
+      // User will need to re-enter master password after page refresh
+      // Don't set isAuthenticated to true here - let the Dashboard handle this
     }
   }, []);
 
@@ -66,9 +68,12 @@ export const AuthProvider = ({ children }) => {
 
   // Client-side encryption utilities
   const deriveKey = async (password, salt) => {
+    if (!password || !salt) {
+      throw new Error('Password and salt are required for key derivation');
+    }
+    
     const iterations = 100000;
     const keyLength = 32;
-    const digest = 'sha256';
     
     return CryptoJS.PBKDF2(password, salt, {
       keySize: keyLength / 4, // CryptoJS uses 32-bit words
@@ -133,17 +138,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   const checkPasswordStrength = (password) => {
+    if (!password || password.length === 0) {
+      return {
+        score: 0,
+        strength: 'Very Weak',
+        feedback: ['Enter a password']
+      };
+    }
+
     let score = 0;
     const feedback = [];
     
-    // Length check
-    if (password.length >= 8) score += 1;
-    else feedback.push('Password should be at least 8 characters long');
+    // Length check (0-3 points)
+    if (password.length >= 8) {
+      score += 1;
+      if (password.length >= 12) {
+        score += 1;
+        if (password.length >= 16) {
+          score += 1;
+        }
+      }
+    } else {
+      feedback.push('Password should be at least 8 characters long');
+    }
     
-    if (password.length >= 12) score += 1;
-    if (password.length >= 16) score += 1;
-    
-    // Character variety checks
+    // Character variety checks (0-4 points)
     if (/[a-z]/.test(password)) score += 1;
     else feedback.push('Include lowercase letters');
     
@@ -156,14 +175,19 @@ export const AuthProvider = ({ children }) => {
     if (/[^A-Za-z0-9]/.test(password)) score += 1;
     else feedback.push('Include special characters');
     
-    // Common patterns check
+    // Bonus for complexity
+    if (password.length >= 12 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)) {
+      score += 1;
+    }
+    
+    // Penalties for weak patterns
     if (/(.)\1{2,}/.test(password)) {
-      score -= 1;
+      score = Math.max(0, score - 1);
       feedback.push('Avoid repeated characters');
     }
     
-    if (/123|abc|qwe|password|admin/i.test(password)) {
-      score -= 2;
+    if (/123|abc|qwe|password|admin|qwerty|letmein/i.test(password)) {
+      score = Math.max(0, score - 2);
       feedback.push('Avoid common patterns');
     }
     
@@ -172,11 +196,19 @@ export const AuthProvider = ({ children }) => {
     if (score >= 6) strength = 'Strong';
     else if (score >= 4) strength = 'Medium';
     else if (score >= 2) strength = 'Weak';
+    else strength = 'Very Weak';
+    
+    // Provide positive feedback for strong passwords
+    if (score >= 6 && feedback.length === 0) {
+      feedback.push('Excellent password!');
+    } else if (score >= 4 && feedback.length === 0) {
+      feedback.push('Good password!');
+    }
     
     return {
       score: Math.max(0, score),
       strength,
-      feedback: feedback.length > 0 ? feedback : ['Good password!']
+      feedback: feedback.length > 0 ? feedback : ['Password is too weak']
     };
   };
 

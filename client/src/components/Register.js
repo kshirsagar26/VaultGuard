@@ -12,10 +12,12 @@ import {
 } from '@mui/material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
 const Register = () => {
+  const { mode } = useTheme();
   const [formData, setFormData] = useState({
     username: '',
     masterPassword: '',
@@ -111,6 +113,9 @@ const Register = () => {
           p: 4,
           width: '100%',
           maxWidth: 400,
+          background: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom align="center">

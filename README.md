@@ -1,37 +1,115 @@
-# Secure Password Manager
+# 🔐 VaultGuard - Secure Password Manager
 
-A modern, secure web-based password manager with **zero-knowledge architecture** and client-side encryption.
+A modern, enterprise-grade password manager with **zero-knowledge architecture**, client-side encryption, and a beautiful, responsive interface. VaultGuard provides military-grade security with an intuitive user experience.
 
-## 🚀 Features
+![VaultGuard Logo](https://img.shields.io/badge/VaultGuard-Secure%20Password%20Manager-6366f1?style=for-the-badge&logo=shield-check)
+
+## ✨ Key Features
+
+### 🔒 **Security First**
 - **Zero-Knowledge Architecture**: Your master password never leaves your device
-- **Client-Side Encryption**: All passwords are encrypted/decrypted in your browser
-- **PBKDF2 + AES Encryption**: Industry-standard encryption algorithms
-- **Password Generator**: Generate strong, customizable passwords
-- **Password Strength Checker**: Real-time password strength analysis
-- **Modern UI**: Beautiful Material-UI interface with dark theme
-- **Search & Filter**: Find passwords quickly with search and category filtering
-- **Secure Storage**: SQLite database with encrypted data storage
+- **Client-Side Encryption**: All passwords encrypted/decrypted in your browser
+- **PBKDF2 + AES-256-GCM**: Industry-standard encryption with 100,000 iterations
+- **HTTPS Support**: End-to-end encrypted communication
+- **Content Security Policy**: Advanced XSS protection
 
-## 🛡️ Security Features
-- **Zero-Knowledge Authentication**: Master password is hashed client-side before server communication
-- **PBKDF2 Key Derivation**: 100,000 iterations for secure key generation
-- **AES-256-GCM Encryption**: Authenticated encryption for data integrity
-- **HTTPS Support**: Secure communication with SSL/TLS encryption
-- **Content Security Policy**: Prevents XSS attacks and enforces secure resource loading
-- **Rate Limiting**: Stricter limits on authentication endpoints (5 attempts per 15 minutes)
-- **CORS Protection**: Configured for secure cross-origin requests
-- **Security Headers**: Comprehensive HTTP security headers via Helmet
-- **Client-Side Processing**: All sensitive operations happen in your browser
+### 🎨 **Modern UI/UX**
+- **Dark/Light Mode**: Seamless theme switching with persistent preferences
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Material-UI Components**: Beautiful, accessible interface components
+- **Real-time Search**: Instant password filtering and search
+- **Multiple View Modes**: Grid and list views for different preferences
 
-## 🔐 Zero-Knowledge Architecture
+### 🛠️ **Advanced Functionality**
+- **Password Generator**: Customizable strong password generation
+- **Password Strength Analyzer**: Real-time strength assessment with feedback
+- **Category Management**: Organize passwords by categories
+- **Favorites System**: Mark and filter important passwords
+- **Tags Support**: Add custom tags for better organization
+- **Notes & URLs**: Store additional information with each password
 
-This password manager implements true zero-knowledge architecture:
+### 📊 **Dashboard & Analytics**
+- **Password Statistics**: Overview of your password collection
+- **Security Insights**: Password strength distribution
+- **Quick Actions**: One-click password operations
+- **Export/Import**: Secure data portability
 
-1. **Registration**: Master password is hashed client-side with PBKDF2 before being sent to server
-2. **Login**: Client retrieves salt, hashes password locally, sends only the hash
-3. **Encryption**: All password encryption/decryption happens in the browser
-4. **Server Storage**: Server stores only hashed master passwords and encrypted data
+## 🚀 Quick Start
 
+### Prerequisites
+- **Node.js** (v16 or higher)
+- **npm** or **yarn**
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd vaultguard-password-manager
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm run install-all
+   ```
+
+3. **Configure environment**
+   ```bash
+   cd server
+   cp env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. **Start development servers**
+   ```bash
+   npm run dev
+   ```
+
+5. **Access VaultGuard**
+   - 🌐 **Frontend**: http://localhost:3000
+   - 🔧 **Backend API**: http://localhost:5000
+   - 📊 **Health Check**: http://localhost:5000/api/health
+
+## 🏗️ Architecture Overview
+
+### Frontend (React)
+```
+client/src/
+├── components/           # UI Components
+│   ├── Dashboard.js     # Main dashboard interface
+│   ├── Login.js         # Enhanced login with VaultGuard branding
+│   ├── Register.js      # User registration
+│   ├── PasswordDialog.js # Add/edit password modal
+│   ├── PasswordCard.js  # Password display cards
+│   ├── Sidebar.js       # Navigation sidebar
+│   ├── SearchAndFilter.js # Advanced search & filtering
+│   └── ThemeToggle.js   # Dark/light mode toggle
+├── contexts/            # React Contexts
+│   ├── AuthContext.js   # Authentication & encryption
+│   └── ThemeContext.js  # Theme management
+└── App.js              # Main application
+```
+
+### Backend (Node.js/Express)
+```
+server/
+├── database/           # Database management
+│   ├── db.js          # SQLite setup & migrations
+│   ├── viewer.js      # Database inspection tools
+│   └── migrate.js     # Schema migrations
+├── routes/            # API endpoints
+│   ├── auth.js        # Authentication routes
+│   └── passwords.js   # Password management
+├── utils/             # Utilities
+│   └── crypto.js      # Cryptographic functions
+└── index.js          # Server entry point
+```
+
+## 🔐 Zero-Knowledge Security Architecture
+
+VaultGuard implements true zero-knowledge architecture ensuring your data remains private:
+
+### Authentication Flow
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   React Client  │    │  Express Server │    │  SQLite Database│
@@ -43,171 +121,74 @@ This password manager implements true zero-knowledge architecture:
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🏗️ Architecture
-
-### Frontend (React)
-- **Authentication**: Zero-knowledge login/registration
-- **Encryption**: Client-side PBKDF2 + AES encryption
-- **UI**: Material-UI components with dark theme
-- **State Management**: React Context for authentication
-- **Routing**: React Router for navigation
-
-### Backend (Node.js/Express)
-- **API**: RESTful endpoints for authentication and password management
-- **Security**: Helmet, CORS, rate limiting, CSP headers
-- **Database**: SQLite with encrypted data storage
-- **HTTPS**: SSL/TLS support for production
-
 ### Security Implementation
 - **Master Password**: Never transmitted to server in plain text
 - **Key Derivation**: PBKDF2 with 100,000 iterations
 - **Encryption**: AES-256-GCM for authenticated encryption
 - **Rate Limiting**: 5 auth attempts per 15 minutes
 - **CSP**: Strict Content Security Policy headers
-- **HTTPS**: Optional SSL/TLS encryption
+- **HTTPS**: SSL/TLS encryption support
 
-## 🚀 Quick Start
+## 🎨 UI/UX Features
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
+### Dark/Light Mode
+- **Automatic Detection**: Respects system preferences
+- **Manual Toggle**: Easy theme switching
+- **Persistent**: Remembers your preference
+- **Consistent**: All components support both themes
 
-### Installation
+### Dashboard Interface
+- **Modern Cards**: Beautiful password display cards
+- **Quick Actions**: Copy, edit, delete with one click
+- **Search & Filter**: Advanced filtering by category, tags, favorites
+- **Statistics**: Password collection overview
+- **Responsive**: Works on all screen sizes
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd password-manager
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm run install-all
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cd server
-   cp env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Start the development servers**
-   ```bash
-   npm run dev
-   ```
-
-5. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:5000
-   - Health Check: http://localhost:5000/api/health
-
-### Production Deployment
-
-1. **Build the frontend**
-   ```bash
-   npm run build
-   ```
-
-2. **Configure environment variables**
-   ```bash
-   NODE_ENV=production
-   USE_HTTPS=true
-   CLIENT_URL=https://your-domain.com
-   SSL_KEY_PATH=/path/to/your/key.pem
-   SSL_CERT_PATH=/path/to/your/cert.pem
-   ```
-
-3. **Start the production server**
-   ```bash
-   npm start
-   ```
-
-## 📁 Project Structure
-
-```
-password-manager/
-├── client/                 # React frontend
-│   ├── public/            # Static files
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── contexts/      # React contexts
-│   │   └── App.js         # Main app component
-│   └── package.json
-├── server/                # Node.js backend
-│   ├── database/          # Database configuration
-│   ├── routes/            # API routes
-│   ├── utils/             # Utility functions
-│   ├── index.js           # Server entry point
-│   └── package.json
-├── package.json           # Root package.json
-└── README.md
-```
+### Password Management
+- **Strength Indicator**: Real-time password strength analysis
+- **Generator**: Customizable password generation
+- **Categories**: Predefined and custom categories
+- **Tags**: Flexible tagging system
+- **Notes**: Additional information storage
+- **URLs**: Direct website access
 
 ## 🔌 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - Register new user (zero-knowledge)
-- `POST /api/auth/login` - Login user (zero-knowledge)
-- `GET /api/auth/salt/:username` - Get user's salt for client-side hashing
-- `POST /api/auth/verify` - Verify master password
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/register` | Register new user (zero-knowledge) |
+| `POST` | `/api/auth/login` | Login user (zero-knowledge) |
+| `GET` | `/api/auth/salt/:username` | Get user's salt for client-side hashing |
+| `POST` | `/api/auth/verify` | Verify master password |
 
 ### Password Management
-- `GET /api/passwords` - Get all passwords for user
-- `POST /api/passwords` - Create new password entry
-- `PUT /api/passwords/:id` - Update password entry
-- `DELETE /api/passwords/:id` - Delete password entry
-- `GET /api/passwords/categories` - Get password categories
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/passwords` | Get all passwords for user |
+| `POST` | `/api/passwords` | Create new password entry |
+| `PUT` | `/api/passwords/:id` | Update password entry |
+| `DELETE` | `/api/passwords/:id` | Delete password entry |
+| `GET` | `/api/passwords/categories` | Get password categories |
 
-## 🛡️ Security Implementation Details
+## 🛡️ Security Features
 
-### Zero-Knowledge Authentication Flow
-
-1. **Registration**:
-   ```
-   Client: Generate salt → Hash password with PBKDF2 → Send hash + salt to server
-   Server: Store hash + salt → Return success
-   ```
-
-2. **Login**:
-   ```
-   Client: Request salt → Hash password with salt → Send hash to server
-   Server: Compare hashes → Return user data + salt
-   Client: Store actual password for encryption
-   ```
+### Zero-Knowledge Authentication
+1. **Registration**: Client hashes password with PBKDF2 → Sends hash to server
+2. **Login**: Client requests salt → Hashes password → Sends hash to server
+3. **Verification**: Server compares hashes → Returns user data
 
 ### Encryption Process
-
 1. **Key Derivation**: PBKDF2 with 100,000 iterations
 2. **Data Encryption**: AES-256-GCM with random IV
 3. **Storage**: Encrypted data + IV + authentication tag
 
 ### Security Headers
-
-- **Content Security Policy**: Prevents XSS and enforces secure resource loading
-- **HTTP Strict Transport Security**: Enforces HTTPS
-- **X-Frame-Options**: Prevents clickjacking
-- **X-Content-Type-Options**: Prevents MIME type sniffing
+- **Content Security Policy**: XSS prevention
+- **HTTP Strict Transport Security**: HTTPS enforcement
+- **X-Frame-Options**: Clickjacking protection
+- **X-Content-Type-Options**: MIME type protection
 - **X-XSS-Protection**: Additional XSS protection
-
-## 🎨 UI Features
-
-### Dashboard
-- **Password Cards**: Display passwords with copy functionality
-- **Search**: Real-time search through passwords
-- **Categories**: Filter passwords by category
-- **Add/Edit**: Modal dialogs for password management
-
-### Password Generator
-- **Customizable Length**: 8-64 characters
-- **Character Sets**: Uppercase, lowercase, numbers, symbols
-- **Strength Indicator**: Real-time password strength analysis
-- **Presets**: Common password patterns
-
-### Security Indicators
-- **Password Strength**: Visual strength meter
-- **Copy Feedback**: Confirmation when copying passwords
-- **Session Management**: Automatic logout on inactivity
 
 ## 🛠️ Development Scripts
 
@@ -229,83 +210,158 @@ npm run build
 
 # Start production server
 npm start
+
+# Database tools
+npm run db:view      # View database contents
+npm run db:browser   # Interactive SQLite browser
 ```
 
-## 🔧 Environment Variables
+## 🔧 Environment Configuration
 
-### Server Configuration
+### Server Environment Variables
 ```env
-PORT=5000                    # HTTP port
-HTTPS_PORT=5001             # HTTPS port
-NODE_ENV=development        # Environment
-USE_HTTPS=false            # Enable HTTPS
-SSL_KEY_PATH=./ssl/key.pem # SSL private key
-SSL_CERT_PATH=./ssl/cert.pem # SSL certificate
-CLIENT_URL=http://localhost:3000 # CORS origin
+# Server Configuration
+PORT=5000
+HTTPS_PORT=5001
+NODE_ENV=development
+USE_HTTPS=false
+
+# SSL Configuration
+SSL_KEY_PATH=./ssl/key.pem
+SSL_CERT_PATH=./ssl/cert.pem
+
+# CORS Configuration
+CLIENT_URL=http://localhost:3000
+
+# Rate Limiting
+RATE_LIMIT_MAX_REQUESTS=100
+AUTH_RATE_LIMIT_MAX_REQUESTS=5
+RATE_LIMIT_WINDOW_MS=900000
 ```
 
-### Security Configuration
+## 🚀 Production Deployment
+
+### 1. Build the Application
+```bash
+npm run build
+```
+
+### 2. Configure Production Environment
 ```env
-RATE_LIMIT_MAX_REQUESTS=100      # General rate limit
-AUTH_RATE_LIMIT_MAX_REQUESTS=5   # Auth endpoint rate limit
-RATE_LIMIT_WINDOW_MS=900000      # Rate limit window (15 min)
+NODE_ENV=production
+USE_HTTPS=true
+CLIENT_URL=https://your-domain.com
+SSL_KEY_PATH=/path/to/your/key.pem
+SSL_CERT_PATH=/path/to/your/cert.pem
 ```
 
-## 🛡️ Security Best Practices
-
-### For Users
-1. **Strong Master Password**: Use a strong, unique master password
-2. **Regular Updates**: Update your master password periodically
-3. **Secure Environment**: Only access from trusted devices
-4. **HTTPS**: Always use HTTPS in production
-
-### For Developers
-1. **Environment Variables**: Never commit sensitive data
-2. **SSL Certificates**: Use valid SSL certificates in production
-3. **Rate Limiting**: Monitor and adjust rate limits as needed
-4. **Security Headers**: Keep security headers up to date
-5. **Dependencies**: Regularly update dependencies for security patches
-
-## 🚀 Deployment
-
-### Docker Deployment
-```dockerfile
-# Example Dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-RUN npm run build
-EXPOSE 5000
-CMD ["npm", "start"]
+### 3. Start Production Server
+```bash
+npm start
 ```
 
-### Cloud Deployment
-- **Heroku**: Use environment variables for configuration
-- **AWS**: Use EC2 with SSL certificates
-- **Vercel**: Deploy frontend, use serverless functions for backend
-- **DigitalOcean**: Use App Platform with SSL
+### Deployment Options
+- **Docker**: Containerized deployment
+- **Heroku**: Cloud platform deployment
+- **AWS**: EC2 with SSL certificates
+- **Vercel**: Frontend + serverless backend
+- **DigitalOcean**: App Platform deployment
+
+## 📊 Database Management
+
+### View Database Contents
+```bash
+npm run db:view
+```
+
+### Interactive SQLite Browser
+```bash
+npm run db:browser
+```
+
+### Database Schema
+```sql
+-- Users table
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  master_password_hash TEXT NOT NULL,
+  salt TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Passwords table
+CREATE TABLE passwords (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  username TEXT,
+  password TEXT NOT NULL,
+  url TEXT,
+  notes TEXT,
+  category TEXT DEFAULT 'General',
+  tags TEXT,
+  favorite BOOLEAN DEFAULT 0,
+  expiry_date DATETIME,
+  strength INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users (id)
+);
+```
+
+## 🎯 Use Cases
+
+### Personal Use
+- **Password Storage**: Secure storage for all your passwords
+- **Password Generation**: Create strong, unique passwords
+- **Organization**: Categorize and tag passwords
+- **Accessibility**: Access from any device with internet
+
+### Business Use
+- **Team Management**: Secure password sharing (future feature)
+- **Compliance**: Meet security compliance requirements
+- **Audit Trail**: Track password changes and access
+- **Integration**: API for enterprise integration
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+We welcome contributions to VaultGuard! Please follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to the branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
+
+### Development Guidelines
+- Follow the existing code style
+- Add tests for new features
+- Update documentation
+- Ensure security best practices
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-## ⚠️ Disclaimer
+## ⚠️ Security Disclaimer
 
-This password manager is designed for educational and personal use. For production use in enterprise environments, additional security measures and audits may be required. Always follow your organization's security policies and consult with security professionals.
+VaultGuard is designed for educational and personal use. For enterprise deployment, additional security measures, audits, and compliance verification may be required. Always consult with security professionals and follow your organization's security policies.
 
-## 🔗 Related Links
+## 🔗 Related Resources
 
 - [PBKDF2 Specification](https://tools.ietf.org/html/rfc2898)
-- [AES Encryption](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf)
+- [AES Encryption Standard](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf)
 - [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
-- [OWASP Security Guidelines](https://owasp.org/www-project-top-ten/) 
+- [OWASP Security Guidelines](https://owasp.org/www-project-top-ten/)
+- [Material-UI Documentation](https://mui.com/)
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
+- **Documentation**: [Wiki](https://github.com/your-repo/wiki)
+- **Security**: [Security Policy](https://github.com/your-repo/security/policy)
+
+---
+
+**Made with ❤️ and 🔒 for secure password management** 

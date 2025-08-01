@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     
     // Get all passwords for the user
     db.all(
-      'SELECT id, title, username, encrypted_password, encrypted_notes, url, category, created_at, updated_at FROM passwords WHERE user_id = ? ORDER BY updated_at DESC',
+      'SELECT id, title, username, encrypted_password, encrypted_notes, url, category, tags, favorite, expiry_date, strength, created_at, updated_at FROM passwords WHERE user_id = ? ORDER BY updated_at DESC',
       [userId],
       async (err, passwords) => {
         if (err) {
@@ -45,6 +45,10 @@ router.get('/', async (req, res) => {
                 notes: pwd.encrypted_notes ? decrypt(pwd.encrypted_notes, key) : '',
                 url: pwd.url,
                 category: pwd.category,
+                tags: pwd.tags ? JSON.parse(pwd.tags) : [],
+                favorite: Boolean(pwd.favorite),
+                expiryDate: pwd.expiry_date,
+                strength: pwd.strength || 0,
                 createdAt: pwd.created_at,
                 updatedAt: pwd.updated_at
               };
@@ -73,7 +77,7 @@ router.get('/', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const { userId, masterPassword, salt, title, username, password, notes, url, category } = req.body;
+    const { userId, masterPassword, salt, title, username, password, notes, url, category, tags, favorite, expiryDate, strength } = req.body;
     
     if (!userId || !masterPassword || !salt || !title || !password) {
       return res.status(400).json({ 
@@ -93,9 +97,9 @@ router.post('/', async (req, res) => {
       
       // Insert new password entry
       db.run(
-        `INSERT INTO passwords (user_id, title, username, encrypted_password, encrypted_notes, url, category) 
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [userId, title, username || '', encryptedPassword, encryptedNotes, url || '', category || 'General'],
+        `INSERT INTO passwords (user_id, title, username, encrypted_password, encrypted_notes, url, category, tags, favorite, expiry_date, strength) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [userId, title, username || '', encryptedPassword, encryptedNotes, url || '', category || 'General', JSON.stringify(tags || []), favorite || false, expiryDate || null, strength || 0],
         function(err) {
           if (err) {
             console.error('Database error:', err);
@@ -125,7 +129,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId, masterPassword, salt, title, username, password, notes, url, category } = req.body;
+    const { userId, masterPassword, salt, title, username, password, notes, url, category, tags, favorite, expiryDate, strength } = req.body;
     
     if (!userId || !masterPassword || !salt || !title || !password) {
       return res.status(400).json({ 
@@ -160,9 +164,9 @@ router.put('/:id', async (req, res) => {
           // Update password entry
           db.run(
             `UPDATE passwords 
-             SET title = ?, username = ?, encrypted_password = ?, encrypted_notes = ?, url = ?, category = ?, updated_at = CURRENT_TIMESTAMP
+             SET title = ?, username = ?, encrypted_password = ?, encrypted_notes = ?, url = ?, category = ?, tags = ?, favorite = ?, expiry_date = ?, strength = ?, updated_at = CURRENT_TIMESTAMP
              WHERE id = ? AND user_id = ?`,
-            [title, username || '', encryptedPassword, encryptedNotes, url || '', category || 'General', id, userId],
+            [title, username || '', encryptedPassword, encryptedNotes, url || '', category || 'General', JSON.stringify(tags || []), favorite || false, expiryDate || null, strength || 0, id, userId],
             function(err) {
               if (err) {
                 console.error('Database error:', err);
